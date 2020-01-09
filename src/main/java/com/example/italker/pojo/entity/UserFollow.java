@@ -1,5 +1,7 @@
 package com.example.italker.pojo.entity;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,11 +16,20 @@ import java.time.LocalDateTime;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-@Entity
 @Table(name = "TB_USER_FOLLOW")
+@Data
+@Accessors(chain = true)
 public class UserFollow {
 
-    @Id
+    //这里要注意@ManyToOne(optional = false)
+    private String id;
+    private String originId;
+    private String targetId;
+    private String alias;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+
+    /*@Id
     @PrimaryKeyJoinColumn
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -132,7 +143,7 @@ public class UserFollow {
 
     public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
-    }
+    }*/
 }
 
 

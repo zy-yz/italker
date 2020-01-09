@@ -1,5 +1,7 @@
 package com.example.italker.pojo.entity;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,8 +15,10 @@ import java.time.LocalDateTime;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-@Entity
+
 @Table(name = "TB_GROUP_MEMBER")
+@Data
+@Accessors(chain = true)
 public class GroupMember {
     public static final int PERMISSION_TYPE_NONE = 0; // 默认权限，普通成员
     public static final int PERMISSION_TYPE_ADMIN = 1;  // 管理员
@@ -24,7 +28,19 @@ public class GroupMember {
     public static final int NOTIFY_LEVEL_NONE = 0; // 默认通知级别
     public static final int NOTIFY_LEVEL_CLOSE = 1; // 接收消息不提示
 
-    @Id
+
+    private String id;
+    private String alias;
+    private int notifyLevel = NOTIFY_LEVEL_NONE;
+    private int permissionType = PERMISSION_TYPE_NONE;
+    private LocalDateTime createAt = LocalDateTime.now();
+    private LocalDateTime updateAt = LocalDateTime.now();
+    private User user;
+    private String userId;
+    private Group group;
+    private String groupId;
+
+    /*@Id
     @PrimaryKeyJoinColumn
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -157,6 +173,6 @@ public class GroupMember {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
-    }
+    }*/
 }
 

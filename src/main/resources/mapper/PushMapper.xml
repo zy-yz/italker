@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.italker.mapper.PushMapper">
+    <insert id="saveHistory" parameterType="com.example.italker.pojo.entity.PushHistory" useGeneratedKeys="true" keyProperty="id">
+        <!--<selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select REPLACE(UUID(),"-","")
+        </selectKey>-->
+        insert into tb_push_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        id,createdAt,updateAt,arrivelAt,
+        <if test="id != null">id,</if>
+        <if test="entity != null">entity,</if>
+        <if test="entityType != null">entityType,</if>
+        <if test="receiverId != null">receiverId,</if>
+        <if test="receiverPushId != null">receiverPushId,</if>
+        <if test="senderId != null">senderId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        (SELECT REPLACE(UUID(), '-', '') AS id),now(),now(),now(),
+        <if test="entity != null">#{entity,jdbcType=VARCHAR},</if>
+        <if test="entityType != null">#{entityType,jdbcType=INTEGER},</if>
+        <if test="receiverId != null">#{receiverId,jdbcType=VARCHAR},</if>
+        <if test="receiverPushId != null">#{receiverPushId,jdbcType=VARCHAR},</if>
+        <if test="senderId != null">#{senderId,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+</mapper>

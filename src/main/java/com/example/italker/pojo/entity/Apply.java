@@ -1,5 +1,7 @@
 package com.example.italker.pojo.entity;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,14 +14,25 @@ import java.time.LocalDateTime;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-@Entity
 @Table(name = "TB_APPLY")
+@Data
+@Accessors(chain = true)
 public class Apply {
+
+    private String id;
+    private String description;
+    private String attach;
+    private int type;
+    private String targetId;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+    private User applicant;
+    private String applicantId;
 
     public static final int TYPE_ADD_USER = 1; // 添加好友
     public static final int TYPE_ADD_GROUP = 2; // 加入群
 
-    @Id
+    /*@Id
     @PrimaryKeyJoinColumn
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -141,6 +154,6 @@ public class Apply {
 
     public void setApplicantId(String applicantId) {
         this.applicantId = applicantId;
-    }
+    }*/
 }
 

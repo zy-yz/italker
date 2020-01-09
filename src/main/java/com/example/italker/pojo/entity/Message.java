@@ -1,6 +1,8 @@
 package com.example.italker.pojo.entity;
 
 import com.example.italker.pojo.view.message.MessageCreateModel;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,8 +16,10 @@ import java.time.LocalDateTime;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-@Entity
+
 @Table(name = "TB_MESSAGE")
+@Data
+@Accessors(chain = true)
 public class Message {
     // 发送给人的
     public static final int RECEIVER_TYPE_NONE = 1;
@@ -27,7 +31,20 @@ public class Message {
     public static final int TYPE_FILE = 3; // 文件类型
     public static final int TYPE_AUDIO = 4; // 语音类型
 
-    // 这是一个主键
+    private String id;
+    private String content;
+    private String attach;
+    private int type;
+    private LocalDateTime createAt = LocalDateTime.now();
+    private LocalDateTime updateAt = LocalDateTime.now();
+    private User sender;
+    private String senderId;
+    private User receiver;
+    private String receiverId;
+    private Group group;
+    private String groupId;
+
+    /*// 这是一个主键
     @Id
     @PrimaryKeyJoinColumn
     // 主键生成存储的类型为UUID
@@ -213,6 +230,6 @@ public class Message {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
-    }
+    }*/
 }
 

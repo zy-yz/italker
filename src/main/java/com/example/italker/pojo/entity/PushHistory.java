@@ -1,8 +1,8 @@
 package com.example.italker.pojo.entity;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,10 +13,27 @@ import java.time.LocalDateTime;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-@Entity
+
 @Table(name = "TB_PUSH_HISTORY")
+@Data
+@Accessors(chain = true)
 public class PushHistory {
-    @Id
+
+    private String id;
+    private String entity;
+    private int entityType;
+    private User receiver;
+    private String receiverId;
+    private User sender;
+    private String senderId;
+    private String receiverPushId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
+    private LocalDateTime arrivelAt;
+
+
+
+    /*@Id
     @PrimaryKeyJoinColumn
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -165,4 +182,6 @@ public class PushHistory {
     public void setArrivalAt(LocalDateTime arrivalAt) {
         this.arrivalAt = arrivalAt;
     }
+
+     */
 }

@@ -1,6 +1,8 @@
 package com.example.italker.pojo.entity;
 
 import com.example.italker.pojo.view.group.GroupCreateModel;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,11 +16,22 @@ import java.time.LocalDateTime;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-@Entity
+
 @Table(name = "TB_GROUP")
+@Data
+@Accessors(chain = true)
 public class Group {
 
-    // 这是一个主键
+    private String id;
+    private String name;
+    private String description;
+    private String picture;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+    private User owner;
+    private String ownerId;;
+
+   /* // 这是一个主键
     @Id
     @PrimaryKeyJoinColumn
     // 主键生成存储的类型为UUID，自动生成UUID
@@ -136,6 +149,6 @@ public class Group {
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
-    }
+    }*/
 }
 

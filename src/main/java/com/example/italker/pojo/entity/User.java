@@ -1,5 +1,7 @@
 package com.example.italker.pojo.entity;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -18,11 +20,58 @@ import java.util.Set;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-@Entity
-@Table(name = "TB_USER")
-public class User implements Principal {
 
-    // 这是一个主键
+@Table(name = "TB_USER")
+@Data
+@Accessors(chain = true)
+public class User  {
+ //implements Principal
+
+
+    private String id;
+    private String name;
+    private String phone;
+    private String password;
+    private String portrait;
+    private String description;
+    private int sex = 0;
+    private String token;
+    private String pushId;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+    private LocalDateTime lastReceivedAt;
+
+    // 我关注的人的列表方法
+    // 对应的数据库表字段为TB_USER_FOLLOW.originId
+    @JoinColumn(name = "originId")
+    // 定义为懒加载，默认加载User信息的时候，并不查询这个集合
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    // 1对多，一个用户可以有很多关注人，每一次关注都是一个记录
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<UserFollow> following = new HashSet<>();
+
+
+    // 关注我的人的列表
+    // 对应的数据库表字段为TB_USER_FOLLOW.targetId
+    @JoinColumn(name = "targetId")
+    // 定义为懒加载，默认加载User信息的时候，并不查询这个集合
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    // 1对多，一个用户可以被很多人关注，每一次关注都是一个记录
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<UserFollow> followers = new HashSet<>();
+
+    // 我所有创建的群
+    // 对应的字段为：Group.ownerId
+    @JoinColumn(name = "ownerId")
+    // 懒加载集合方式为尽可能的不加载具体的数据，
+    // 当访问groups.size()仅仅查询数量，不加载具体的Group信息
+    // 只有当遍历集合的时候才加载具体的数据
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    // FetchType.LAZY：懒加载，加载用户信息时不加载这个集合
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Group> groups = new HashSet<>();
+
+    /*// 这是一个主键
     @Id
     @PrimaryKeyJoinColumn
     // 主键生成存储的类型为UUID
@@ -228,5 +277,5 @@ public class User implements Principal {
 
     public void setGroups(Set<Group> groups) {
         this.groups = groups;
-    }
+    }*/
 }
