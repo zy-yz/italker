@@ -3,6 +3,7 @@ package com.example.italker.controller;
 import com.example.italker.Base.Base;
 import com.example.italker.pojo.entity.User;
 import com.example.italker.pojo.view.account.AccountRspModel;
+import com.example.italker.pojo.view.account.LoginModel;
 import com.example.italker.pojo.view.account.RegisterModel;
 import com.example.italker.pojo.view.base.ResponseModel;
 import com.example.italker.service.AccountService;
@@ -11,8 +12,13 @@ import com.google.common.base.Strings;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping("/account")
@@ -25,10 +31,32 @@ public class AccountController extends Base {
     private UserService userService;
 
 
+
+
+
+    @PostMapping(value = "/login")
+    @ApiOperation(value = "登录")
+    public ResponseModel<AccountRspModel> login(@RequestBody LoginModel model){
+        if(!LoginModel.check(model)){
+            return ResponseModel.buildParameterError();
+        }
+        User user = userService.login(model.getAccount(),model.getPassword());
+        if(user != null){
+            //如果有携带PushId
+            if(!Strings.isNullOrEmpty(model.getPushId())){
+                return bind(user,model.getPushId());
+            }
+            AccountRspModel rspModel  = new AccountRspModel(user);
+            return  ResponseModel.buildOk(rspModel);
+        }else{
+            return ResponseModel.buildLoginError();
+        }
+    }
+
+
     @PostMapping(value = "/register")
     @ApiOperation(value = "注册")
-
-    public ResponseModel<AccountRspModel> register(RegisterModel model) {
+    public ResponseModel<AccountRspModel> register(@RequestBody RegisterModel model) {
         if (!RegisterModel.check(model)) {
             // 返回参数异常
             return ResponseModel.buildParameterError();

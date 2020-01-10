@@ -1,3 +1,4 @@
+/*
 package com.example.italker.utils;
 
 import org.hibernate.Session;
@@ -13,37 +14,47 @@ public class SessionFac {
     @Resource
     private static SessionFactory sessionFactory;
 
-    /**获取全局的SessionFactory
-     * */
+    */
+/**获取全局的SessionFactory
+     * *//*
+
     public static SessionFactory sessionFactory(){
         return sessionFactory;
     }
 
-    /**从sessionFactory中得到一个session对话
+    */
+/**从sessionFactory中得到一个session对话
      *
      * @return
-     */
+     *//*
+
     public static Session session(){
         return sessionFactory.getCurrentSession();
     }
 
-    /**
-     * 关闭sessionFactory*/
+    */
+/**
+     * 关闭sessionFactory*//*
+
     public static void closeFactory(){
         if(sessionFactory !=null){
             sessionFactory.close();
         }
     }
 
-    /**
-     * 用户的实际操作的一个借口*/
+    */
+/**
+     * 用户的实际操作的一个借口*//*
+
     public interface QueryOnly{
         void query(Session session);
     }
 
-    /**
-     * 简化session事务操作的一个工具方法*/
-    public static void queryOnly(QueryOnly query){
+    */
+/**
+     * 简化session事务操作的一个工具方法*//*
+
+    public  void queryOnly(QueryOnly query){
         //重开一个session
         Session session = sessionFactory().openSession();
         //开启事务
@@ -107,3 +118,4 @@ public class SessionFac {
     }
 
 }
+*/

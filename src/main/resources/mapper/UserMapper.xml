@@ -27,12 +27,14 @@
         update tb_user
         <set>
             <if test="pushId != null">
-                id = #{pushId,jdbcType=VARCHAR},
+                pushId = #{pushId,jdbcType=VARCHAR},
             </if>
             <if test="token != null">
                 token = #{token,jdbcType=VARCHAR},
             </if>
+            <if test="description != null">#{description,jdbcType=VARCHAR},</if>
         </set>
+        where id = #{id,jdbcType=VARCHAR}
     </update>
 
 
@@ -54,5 +56,11 @@
     <select id="findUserById" resultType="com.example.italker.pojo.entity.User">
         select * from tb_user
         where id = #{id}
+    </select>
+    <select id="loginFind" resultType="com.example.italker.pojo.entity.User">
+        select * from tb_user
+        where
+        password = #{encodePassword}
+        and phone = #{account}
     </select>
 </mapper>

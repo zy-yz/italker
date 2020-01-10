@@ -1,7 +1,7 @@
 package com.example.italker.pojo.card;
 
 import com.example.italker.pojo.entity.User;
-import com.example.italker.utils.SessionFac;
+//import com.example.italker.utils.SessionFac;
 import com.google.gson.annotations.Expose;
 
 import java.time.LocalDateTime;
@@ -53,7 +53,7 @@ public class UserCard {
 
         // user.getFollowers().size()
         // 懒加载会报错，因为没有Session
-        SessionFac.queryOnly(session -> {
+/*        SessionFac.queryOnly(session -> {
             // 重新加载一次用户信息
             session.load(user, user.getId());
             // 这个时候仅仅只是进行了数量查询，并没有查询整个集合
@@ -61,7 +61,7 @@ public class UserCard {
             // 或者使用Hibernate.initialize(user.getFollowers());
             follows = user.getFollowers().size();
             following = user.getFollowing().size();
-        });
+        });*/
 
     }
 

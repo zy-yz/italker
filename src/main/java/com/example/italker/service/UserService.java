@@ -2,7 +2,7 @@ package com.example.italker.service;
 
 import com.example.italker.mapper.UserMapper;
 import com.example.italker.pojo.entity.User;
-import com.example.italker.utils.SessionFac;
+//import com.example.italker.utils.SessionFac;
 import com.example.italker.utils.TextUtil;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,9 @@ public class UserService {
      * @return User
      */
     public User update(User user){
+        System.out.println("token = "+ user.getToken());
         userMapper.saveOrUpdate(user);
+        System.out.println("token = "+ user.getToken());
         user = userMapper.findUserById(user.getId());
         return user;
     }
@@ -146,12 +148,30 @@ public class UserService {
             // 给之前的设备推送一条退出消息
             if (Strings.isNullOrEmpty(user.getPushId())) {
                 //推送一个退出消息
-                pushService.pushLogout(user,user.getPushId());
+                //pushService.pushLogout(user,user.getPushId());
+                // TODO 推送一个退出消息
             }
             //更新新的设备Id
             user.setPushId(pushId);
             return update(user);
 
         }
+    }
+
+    /**
+     * 使用账户和密码进行登录
+     */
+    public User login(String account, String password) {
+        final String accountStr = account.trim();
+        //把原文进行同样处理，才能匹配
+        final String encodePassword = encodePassword(password);
+        //查找用户
+        User user = userMapper.loginFind(account,encodePassword);
+
+        if (user != null) {
+            // 对User进行登录操作，更新Token
+            user = login(user);
+        }
+        return user;
     }
 }
