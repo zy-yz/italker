@@ -11,12 +11,11 @@ import com.example.italker.service.UserService;
 import com.google.common.base.Strings;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -92,15 +91,31 @@ public class AccountController extends Base {
 
     }
 
+    @PostMapping(value = "/bind/{pushID}")
+    @ApiOperation(value = "绑定")
+    //pushID 从URL 地址中获取
+    public ResponseModel<AccountRspModel> bind (@RequestHeader String token,
+                                                @PathVariable String pushID){
+        if(Strings.isNullOrEmpty(token)||Strings.isNullOrEmpty(pushID)){
+            return ResponseModel.buildParameterError();
+        }
+        User user = userService.findByToken(token);
+
+        if(user != null){
+            return bind(user,pushID);
+        }else {
+            return ResponseModel.buildAccountError();
+        }
+    }
 
 
-    /**
-     * 绑定的操作
-     *
-     * @param self   自己
-     * @param pushId PushId
-     * @return User
-     */
+        /**
+         * 绑定的操作
+         *
+         * @param self   自己
+         * @param pushId PushId
+         * @return User
+         */
     private ResponseModel<AccountRspModel> bind(User self,String pushId){
         //进行设备ID绑定的操作
         User user = userService.bindPushId(self,pushId);

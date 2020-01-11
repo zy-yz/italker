@@ -32,7 +32,8 @@
             <if test="token != null">
                 token = #{token,jdbcType=VARCHAR},
             </if>
-            <if test="description != null">#{description,jdbcType=VARCHAR},</if>
+            <if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+            <if test="updateAt != null">updateAt = now(),</if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
@@ -62,5 +63,10 @@
         where
         password = #{encodePassword}
         and phone = #{account}
+    </select>
+    <select id="findUserByToken" resultType="com.example.italker.pojo.entity.User">
+        select * from tb_user
+        where
+        token = #{token}
     </select>
 </mapper>

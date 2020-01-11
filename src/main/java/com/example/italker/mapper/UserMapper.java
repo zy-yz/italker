@@ -27,4 +27,6 @@ public interface UserMapper {
 
      /**登录查找用户,使用密码和手机*/
     User loginFind(String account, String encodePassword);
+
+    User findUserByToken(String token);
 }

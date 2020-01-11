@@ -35,6 +35,13 @@ public class UserService {
 
 
     /**
+     * 通过Token字段查询用户信息
+     * 只能自己使用，查询的信息是个人信息，非他人信息*/
+    public  User findByToken(String token) {
+        return userMapper.findUserByToken(token);
+    }
+
+    /**
      * 更新用户信息到数据库
      *
      * @param user User

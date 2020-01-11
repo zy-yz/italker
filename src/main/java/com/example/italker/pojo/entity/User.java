@@ -24,8 +24,7 @@ import java.util.Set;
 @Table(name = "TB_USER")
 @Data
 @Accessors(chain = true)
-public class User  {
- //implements Principal
+public class User  implements Principal{
 
 
     private String id;

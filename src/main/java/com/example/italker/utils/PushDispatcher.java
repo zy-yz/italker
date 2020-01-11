@@ -26,9 +26,9 @@ import java.util.logging.Logger;
  */
 public class PushDispatcher {
     //采用"Java SDK 快速入门"， "第二步 获取访问凭证 "中获得的应用配置，用户可以自行替换
-    private static final String appId = "Rr51sROK4B8FXbq0TUjAF5";
-    private static final String appKey = "eurxTdqHECAKgc7s4xtUe9";
-    private static final String masterSecret = "2zqRh5hMIY93LBqVlBtsi";
+    private static final String appId = "JiHNzkaqDb7kCNnWv2V9L2";
+    private static final String appKey = "SNrsoLTSXn5gMdgkP3Z3tA";
+    private static final String masterSecret = "W7xRuAPgsx8b464KdTJwn2";
     private static final String host = "http://sdk.open.api.igexin.com/apiex.htm";
 
     private final IGtPush pusher;
