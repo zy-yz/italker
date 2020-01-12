@@ -8,7 +8,6 @@
         insert into tb_push_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
         id,createdAt,updateAt,arrivelAt,
-        <if test="id != null">id,</if>
         <if test="entity != null">entity,</if>
         <if test="entityType != null">entityType,</if>
         <if test="receiverId != null">receiverId,</if>

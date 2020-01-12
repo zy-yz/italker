@@ -65,6 +65,10 @@ public class UserService {
         return userMapper.findByName(name);
     }
 
+    public User findById(String id){
+        return userMapper.findUserById(id);
+    }
+
     public User register(String account,String password,String name){
         //去除账户中的首位空格
         account = account.trim();
