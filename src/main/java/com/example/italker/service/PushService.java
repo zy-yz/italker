@@ -1,12 +1,10 @@
 package com.example.italker.service;
 
 
+import com.example.italker.mapper.GroupMapper;
 import com.example.italker.mapper.PushMapper;
 import com.example.italker.pojo.card.MessageCard;
-import com.example.italker.pojo.entity.GroupMember;
-import com.example.italker.pojo.entity.Message;
-import com.example.italker.pojo.entity.PushHistory;
-import com.example.italker.pojo.entity.User;
+import com.example.italker.pojo.entity.*;
 import com.example.italker.pojo.view.base.PushModel;
 import com.example.italker.utils.PushDispatcher;
 import com.example.italker.utils.TextUtil;
@@ -14,8 +12,10 @@ import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PushService {
@@ -25,6 +25,9 @@ public class PushService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
 
 
     /**
@@ -71,8 +74,45 @@ public class PushService {
             //保存到数据库
             pushMapper.saveHistory(history);
             /**
-             * 这里他有更新发送者的信息，不知道到底用不用得着更新，现在没加*/
+             * 这里他有更新发送者的信息，不知道到底用不用得着更新，现在没加
+             * 应该要更新时间那些
+             * */
+        }else {
+            Group group = message.getGroup();
+            //因为延迟加载情况可能为null，需要通过ID查询
+            if(group == null){
+                group = groupService.findById(message.getGroupId());
+            }
+            //如果真的没有群,则返回
+            if(group == null){
+                return;
+            }
 
+            //给群成员发送信息
+            Set<GroupMember> members = groupService.getMembers(group);
+            if(members == null || members.size() == 0){
+                return;
+            }
+            //过滤自己
+            members = members.stream()
+                    .filter(groupMember -> !groupMember.getUserId()
+                    .equalsIgnoreCase(sender.getId()))
+                    .collect(Collectors.toSet());
+            if(members.size() == 0){
+                return;
+            }
+
+            //一个历史记录表
+            List<PushHistory> histories = new ArrayList<>();
+
+            //推送的发送者，数据库要存储的列表,所有成员,要发送的数据，发送的类型
+            addGroupMemberPushModel(dispatcher,
+                    histories,
+                    members,
+                    entity,
+                    PushModel.ENTITY_TYPE_MESSAGE);
+
+            //保存到数据库的操作
 
         }
     }
