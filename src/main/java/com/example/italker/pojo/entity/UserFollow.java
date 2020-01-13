@@ -26,8 +26,8 @@ public class UserFollow {
     private String originId;
     private String targetId;
     private String alias;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createAt= LocalDateTime.now();;
+    private LocalDateTime updateAt= LocalDateTime.now();;
 
     /*@Id
     @PrimaryKeyJoinColumn

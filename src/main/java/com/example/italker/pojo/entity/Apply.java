@@ -24,8 +24,8 @@ public class Apply {
     private String attach;
     private int type;
     private String targetId;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createAt= LocalDateTime.now();
+    private LocalDateTime updateAt= LocalDateTime.now();
     private User applicant;
     private String applicantId;
 

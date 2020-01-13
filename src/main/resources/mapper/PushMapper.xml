@@ -7,20 +7,22 @@
         </selectKey>-->
         insert into tb_push_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
-        id,createdAt,updateAt,arrivelAt,
+        id,createdAt,updateAt,
         <if test="entity != null">entity,</if>
         <if test="entityType != null">entityType,</if>
         <if test="receiverId != null">receiverId,</if>
         <if test="receiverPushId != null">receiverPushId,</if>
         <if test="senderId != null">senderId,</if>
+            <if test="arrivelAt != null">arrivelAt,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-        (SELECT REPLACE(UUID(), '-', '') AS id),now(),now(),now(),
+        (SELECT REPLACE(UUID(), '-', '') AS id),#{createAt,jdbcType=TIMESTAMP},#{updateAt,jdbcType=TIMESTAMP},
         <if test="entity != null">#{entity,jdbcType=VARCHAR},</if>
         <if test="entityType != null">#{entityType,jdbcType=INTEGER},</if>
         <if test="receiverId != null">#{receiverId,jdbcType=VARCHAR},</if>
         <if test="receiverPushId != null">#{receiverPushId,jdbcType=VARCHAR},</if>
         <if test="senderId != null">#{senderId,jdbcType=VARCHAR},</if>
+            <if test="arrivelAt != null">#{arrivelAt,jdbcType=TIMESTAMP},</if>
         </trim>
     </insert>
 </mapper>

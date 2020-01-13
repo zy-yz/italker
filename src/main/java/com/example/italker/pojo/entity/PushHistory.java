@@ -27,8 +27,8 @@ public class PushHistory {
     private User sender;
     private String senderId;
     private String receiverPushId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createdAt= LocalDateTime.now();
+    private LocalDateTime updateAt= LocalDateTime.now();
     private LocalDateTime arrivelAt;
 
 

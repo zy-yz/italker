@@ -7,14 +7,14 @@
         </selectKey>
     insert into tb_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-        id,name,password,portrait,phone,sex,createAt,updateAt,lastReceivedAt
+        id,name,password,portrait,phone,sex,createAt,updateAt,lastReceivedAt,
         <if test="description != null">description,</if>
             <if test="pushId != null">pushId,</if>
             <if test="token != null">token,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
         #{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{portrait,jdbcType=VARCHAR},
-        #{phone,jdbcType=VARCHAR},#{sex,jdbcType=INTEGER},now(),now(),now()
+        #{phone,jdbcType=VARCHAR},#{sex,jdbcType=INTEGER},#{createAt,jdbcType=TIMESTAMP},#{updateAt,jdbcType=TIMESTAMP},#{lastReceivedAt,jdbcType=TIMESTAMP},
             <if test="description != null">#{description,jdbcType=VARCHAR},</if>
             <if test="pushId != null">#{pushId,jdbcType=VARCHAR},</if>
             <if test="token != null">#{token,jdbcType=VARCHAR},</if>
@@ -33,7 +33,7 @@
                 token = #{token,jdbcType=VARCHAR},
             </if>
             <if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
-            <if test="updateAt != null">updateAt = now(),</if>
+            <if test="updateAt != null">updateAt = #{updateAt,jdbcType=TIMESTAMP},</if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>

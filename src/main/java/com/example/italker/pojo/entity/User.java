@@ -36,9 +36,9 @@ public class User  implements Principal{
     private int sex = 0;
     private String token;
     private String pushId;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
-    private LocalDateTime lastReceivedAt;
+    private LocalDateTime createAt = LocalDateTime.now();
+    private LocalDateTime updateAt = LocalDateTime.now();
+    private LocalDateTime lastReceivedAt = LocalDateTime.now();
 
     // 我关注的人的列表方法
     // 对应的数据库表字段为TB_USER_FOLLOW.originId

@@ -26,8 +26,8 @@ public class Group {
     private String name;
     private String description;
     private String picture;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createAt= LocalDateTime.now();
+    private LocalDateTime updateAt= LocalDateTime.now();
     private User owner;
     private String ownerId;;
 
