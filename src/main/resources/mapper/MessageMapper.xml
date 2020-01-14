@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.italker.mapper.MessageMapper">
+    <update id="save"></update>
+
+    <select id="findById" resultType="com.example.italker.pojo.entity.Message">
+        select * from tb_message
+        where id = #{id}
+    </select>
+    <select id="getMessage" resultType="com.example.italker.pojo.entity.Message"></select>
+</mapper>

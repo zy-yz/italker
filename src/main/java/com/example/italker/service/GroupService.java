@@ -3,6 +3,7 @@ package com.example.italker.service;
 import com.example.italker.mapper.GroupMapper;
 import com.example.italker.pojo.entity.Group;
 import com.example.italker.pojo.entity.GroupMember;
+import com.example.italker.pojo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,10 @@ public class GroupService {
 
     /**通过ID拿群Model*/
     public Group findById(String groupId) {
+        return groupMapper.findById(groupId);
+    }
+
+    public Group findById(User user, String groupId) {
         return groupMapper.findById(groupId);
     }
 

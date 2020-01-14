@@ -44,6 +44,34 @@ public class Message {
     private Group group;
     private String groupId;
 
+
+    public Message() {
+
+    }
+
+    // 普通朋友的发送的构造函数
+    public Message(User sender, User receiver, MessageCreateModel model) {
+        this.id = model.getId();
+        this.content = model.getContent();
+        this.attach = model.getAttach();
+        this.type = model.getType();
+
+        this.sender = sender;
+        this.receiver = receiver;
+    }
+
+    // 发送给群的构造函数
+    public Message(User sender, Group group, MessageCreateModel model) {
+        this.id = model.getId();
+        this.content = model.getContent();
+        this.attach = model.getAttach();
+        this.type = model.getType();
+
+        this.sender = sender;
+        this.group = group;
+    }
+
+
     /*// 这是一个主键
     @Id
     @PrimaryKeyJoinColumn

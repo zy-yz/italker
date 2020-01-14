@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController extends Base {
 
     @Autowired
