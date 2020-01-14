@@ -8,4 +8,7 @@ public interface PushMapper {
 
 
      void saveHistory(PushHistory history);
+
+    void saveOrUpdate(PushHistory history);
+
 }

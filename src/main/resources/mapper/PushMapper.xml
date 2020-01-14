@@ -25,4 +25,19 @@
             <if test="arrivelAt != null">#{arrivelAt,jdbcType=TIMESTAMP},</if>
         </trim>
     </insert>
+
+
+    <update id="saveOrUpdate">
+        update tb_push_history
+        <set>
+            <if test="updateAt != null">#{updateAt,jdbcType=TIMESTAMP},</if>
+            <if test="entity != null">#{entity,jdbcType=VARCHAR},</if>
+            <if test="entityType != null">#{entityType,jdbcType=INTEGER},</if>
+            <if test="receiverId != null">#{receiverId,jdbcType=VARCHAR},</if>
+            <if test="receiverPushId != null">#{receiverPushId,jdbcType=VARCHAR},</if>
+            <if test="senderId != null">#{senderId,jdbcType=VARCHAR},</if>
+            <if test="arrivelAt != null">#{arrivelAt,jdbcType=TIMESTAMP},</if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
 </mapper>

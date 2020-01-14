@@ -1,9 +1,10 @@
 package com.example.italker.service;
 
 
-import com.example.italker.mapper.GroupMapper;
 import com.example.italker.mapper.PushMapper;
+import com.example.italker.pojo.card.GroupMemberCard;
 import com.example.italker.pojo.card.MessageCard;
+import com.example.italker.pojo.card.UserCard;
 import com.example.italker.pojo.entity.*;
 import com.example.italker.pojo.view.base.PushModel;
 import com.example.italker.utils.PushDispatcher;
@@ -17,6 +18,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @Description: 消息存储与处理
+ * @Email: 1090712762@qq.com
+ * @Author: Rattan Pepper
+ * @Date: 2020/1/14
+ */
 @Service
 public class PushService {
 
@@ -106,15 +113,20 @@ public class PushService {
             List<PushHistory> histories = new ArrayList<>();
 
             //推送的发送者，数据库要存储的列表,所有成员,要发送的数据，发送的类型
-            addGroupMemberPushModel(dispatcher,
+            addGroupMembersPushModel(dispatcher,
                     histories,
                     members,
                     entity,
                     PushModel.ENTITY_TYPE_MESSAGE);
 
             //保存到数据库的操作
+            for(PushHistory history : histories){
+                pushMapper.saveOrUpdate(history);
+            }
 
         }
+        //提交发送
+        dispatcher.submit();
     }
 
 
@@ -162,7 +174,7 @@ public class PushService {
     /**
      * 给群成员构建一个消息
      * 把消息存储到数据库的历史记录表中,每个人,每条消息都是一个记录*/
-    private void addGroupMemberPushModel(PushDispatcher dispatcher,
+    private void addGroupMembersPushModel(PushDispatcher dispatcher,
                                          List<PushHistory> histories,
                                          Set<GroupMember> members,
                                          String entity,
@@ -188,5 +200,120 @@ public class PushService {
             //添加到发送者的数据集中
             dispatcher.add(receiver,pushModel);
         }
+    }
+
+
+    /**
+     * @Description: 通知一些成员,被加入了XXX群
+     * @Email: 1090712762@qq.com
+     * @Author: Rattan Pepper
+     * @Date: 2020/1/14
+     */
+    public void pushJoinGroup(Set<GroupMember> members){
+
+        //发送者
+        PushDispatcher dispatcher = new PushDispatcher();
+
+        //一个历史记录列表
+        List<PushHistory> histories = new ArrayList<>();
+
+        for (GroupMember member : members){
+            User receiver = member.getUser();
+            if(receiver == null){
+                return;
+            }
+
+            //给每个成员的信息卡片
+            GroupMemberCard memberCard = new GroupMemberCard(member);
+            String entity = TextUtil.toJson(memberCard);
+
+            //历史记录表字段建立
+            PushHistory history = new PushHistory();
+            // 你被添加到群的类型
+            history.setEntityType(PushModel.ENTITY_TYPE_ADD_GROUP);
+            history.setEntity(entity);
+            history.setReceiver(receiver);
+            history.setReceiverPushId(receiver.getPushId());
+            histories.add(history);
+
+            //构建一个消息model
+            PushModel pushModel = new PushModel()
+                    .add(history.getEntityType(),history.getEntity());
+
+            //添加到发送者的数据集中
+            dispatcher.add(receiver,pushModel);
+            histories.add(history);
+        }
+
+        //保存到数据库中
+        for (PushHistory history : histories){
+            pushMapper.saveOrUpdate(history);
+        }
+        //提交发送
+        dispatcher.submit();
+    }
+
+
+    /**
+     * @Description: 通知老成员,有一系列新的成员加入到某个群
+     * @Email: 1090712762@qq.com
+     * @Author: Rattan Pepper
+     * @Date: 2020/1/14
+     */
+    public void pushGroupMemberAdd(Set<GroupMember> oldMembers,
+                                   List<GroupMemberCard> insertCards){
+
+        //发送者
+        PushDispatcher dispatcher = new PushDispatcher();
+
+        //一个历史记录列表
+        List<PushHistory> histories = new ArrayList<>();
+
+        //当前新增的用户的集合的json字符串
+        String entity = TextUtil.toJson(insertCards);
+
+        // 进行循环添加，给oldMembers每一个老的用户构建一个消息，消息的内容为新增的用户的集合
+        // 通知的类型是：群成员添加了的类型
+        addGroupMembersPushModel(dispatcher, histories, oldMembers,
+                entity, PushModel.ENTITY_TYPE_ADD_GROUP_MEMBERS);
+
+        //保存到数据库中
+        for (PushHistory history : histories){
+            pushMapper.saveOrUpdate(history);
+        }
+        //提交发送
+        dispatcher.submit();
+
+    }
+
+    /**
+     * @Description: 给一个朋友推送我的信息过去,
+     * @Email: 1090712762@qq.com
+     * @Author: Rattan Pepper
+     * @Date: 2020/1/14
+     */
+    public void pushFollow(User receiver, UserCard userCard){
+
+        //一定是互相关注了
+        userCard.setFollow(true);
+        String entity = TextUtil.toJson(userCard);
+
+        // 历史记录表字段建立
+        PushHistory history = new PushHistory();
+        // 你被添加到群的类型
+        history.setEntityType(PushModel.ENTITY_TYPE_ADD_FRIEND);
+        history.setEntity(entity);
+        history.setReceiver(receiver);
+        history.setReceiverPushId(receiver.getPushId());
+        // 保存到历史记录表
+        pushMapper.saveHistory(history);
+
+        // 推送
+        PushDispatcher dispatcher = new PushDispatcher();
+        PushModel pushModel = new PushModel()
+                .add(history.getEntityType(), history.getEntity());
+        dispatcher.add(receiver, pushModel);
+        dispatcher.submit();
+
     }
 }
