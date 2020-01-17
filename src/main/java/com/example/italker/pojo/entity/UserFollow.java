@@ -28,6 +28,10 @@ public class UserFollow {
     private String alias;
 
 
+
+    @JoinColumn(name = "originId")
+    private User origin;
+
     // 定义关注的目标，你关注的人
     // 也是多对1，你可以被很多人关注，每次一关注都是一条记录
     // 所有就是 多个UserFollow 对应 一个 User 的情况
@@ -36,8 +40,8 @@ public class UserFollow {
     // 定义的是数据库中的存储字段
     @JoinColumn(name = "targetId")
     private User target;
-    private LocalDateTime createAt= LocalDateTime.now();;
-    private LocalDateTime updateAt= LocalDateTime.now();;
+    private LocalDateTime createAt= LocalDateTime.now();
+    private LocalDateTime updateAt= LocalDateTime.now();
 
     /*@Id
     @PrimaryKeyJoinColumn

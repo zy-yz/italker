@@ -3,6 +3,7 @@ import com.example.italker.pojo.card.UserCard;
 import com.example.italker.pojo.entity.User;
 import com.example.italker.pojo.view.base.ResponseModel;
 import com.example.italker.pojo.view.user.UpdateInfoModel;
+import com.example.italker.service.PushService;
 import com.example.italker.service.UserService;
 import com.google.common.base.Strings;
 import io.swagger.annotations.*;
@@ -27,6 +28,9 @@ public class UserController{
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PushService pushService;
 
     @PostMapping(value = "/update")
     @ApiOperation(value = "用户信息修改接口,返回自己的个人信息")
@@ -120,6 +124,41 @@ public class UserController{
     }
 
 
+    @PostMapping(value="/follow/{followId}")
+    @ApiOperation(value="关注人，简化：关注人的操作其实是双方同时关注")
+    public ResponseModel<UserCard> follow(@PathVariable String followId,HttpServletRequest request) {
 
+        User self = new User();
+        self = (User)request.getAttribute("aself");
 
+        // 不能关注我自己
+        if (self.getId().equalsIgnoreCase(followId)
+                || Strings.isNullOrEmpty(followId)) {
+            // 返回参数异常
+            return ResponseModel.buildParameterError();
+        }
+
+        //找到我也关注的人
+        User followUser = userService.findById(followId);
+        if(followUser == null){
+            //未找到人
+            return ResponseModel.buildNotFoundUserError(null);
+        }
+
+        //备注默认没有，后面扩展
+        followUser = userService.follow(self,followUser,null);
+
+        if (followUser == null) {
+            // 关注失败，返回服务器异常
+            return ResponseModel.buildServiceError();
+        }
+
+        //通知我关注的人我关注他
+        //给他发送一个我的信息过去
+        pushService.pushFollow(followUser,new UserCard(self));
+
+        //返回关注的人的信息
+        return ResponseModel.buildOk(new UserCard(followUser,true));
+
+    }
     }

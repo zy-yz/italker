@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import javafx.util.converter.LocalDateTimeStringConverter;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;

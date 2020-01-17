@@ -2,7 +2,6 @@ package com.example.italker.config;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
 
 import com.example.italker.pojo.entity.User;
 import com.example.italker.pojo.view.base.ResponseModel;

@@ -16,7 +16,7 @@
             <if test="arrivelAt != null">arrivelAt,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-        (SELECT REPLACE(UUID(), '-', '') AS id),#{createAt,jdbcType=TIMESTAMP},#{updateAt,jdbcType=TIMESTAMP},
+        (SELECT REPLACE(UUID(), '-', '') AS id),#{createdAt,jdbcType=TIMESTAMP},#{updateAt,jdbcType=TIMESTAMP},
         <if test="entity != null">#{entity,jdbcType=VARCHAR},</if>
         <if test="entityType != null">#{entityType,jdbcType=INTEGER},</if>
         <if test="receiverId != null">#{receiverId,jdbcType=VARCHAR},</if>

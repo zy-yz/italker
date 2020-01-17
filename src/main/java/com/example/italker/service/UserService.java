@@ -11,7 +11,7 @@ import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -238,6 +238,45 @@ public class UserService {
             name = "";
         }
         return userMapper.search(name);
+
+    }
+
+    /**
+     * 关注人的操作
+     *
+     * @param origin 发起者
+     * @param target 被关注的人
+     * @param alias  备注名
+     * @return 被关注的人的信息
+     */
+    public User follow(User origin, User target, String alias) {
+
+        UserFollow follow = getUserFollow(origin,target);
+        if(follow != null){
+            //已关注，直接返回
+            return follow.getTarget();
+        }
+
+        origin = userMapper.findUserById(origin.getId());
+        target = userMapper.findUserById(target.getId());
+
+        // 我关注人的时候，同时他也关注我，
+        // 所有需要添加两条UserFollow数据
+        UserFollow originFollow = new UserFollow();
+        originFollow.setOriginId(origin.getId());
+        originFollow.setTargetId(target.getId());
+        // 备注是我对他的备注，他对我默认没有备注
+        originFollow.setAlias(alias);
+
+        // 发起者是他，我是被关注的人的记录
+        UserFollow targetFollow = new UserFollow();
+        targetFollow.setOriginId(target.getId());
+        targetFollow.setTargetId(origin.getId());
+
+        userMapper.insertUserFollow(targetFollow);
+        userMapper.insertUserFollow(originFollow);
+
+        return target;
 
     }
 }

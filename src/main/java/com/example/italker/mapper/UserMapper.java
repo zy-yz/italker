@@ -34,4 +34,6 @@ public interface UserMapper {
     UserFollow getUserFollow(String originId, String targetId);
 
     List<User> search(String name);
+
+    void insertUserFollow(UserFollow follow);
 }

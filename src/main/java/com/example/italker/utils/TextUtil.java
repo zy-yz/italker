@@ -2,6 +2,7 @@ package com.example.italker.utils;
 
 
 import com.example.italker.provider.GsonProvider;
+import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -13,6 +14,7 @@ import java.util.Base64;
  * @Author: Rattan Pepper
  * @Date: 2020/1/6
  */
+@Component
 public class TextUtil {
 
 

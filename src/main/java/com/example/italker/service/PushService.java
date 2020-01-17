@@ -1,6 +1,7 @@
 package com.example.italker.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.example.italker.mapper.PushMapper;
 import com.example.italker.pojo.card.GroupMemberCard;
 import com.example.italker.pojo.card.MessageCard;
@@ -296,14 +297,16 @@ public class PushService {
 
         //一定是互相关注了
         userCard.setFollow(true);
-        String entity = TextUtil.toJson(userCard);
+        //String entity = TextUtil.toJson(userCard);
+        String entity = JSON.toJSONString(userCard);
+
 
         // 历史记录表字段建立
         PushHistory history = new PushHistory();
         // 你被添加到群的类型
         history.setEntityType(PushModel.ENTITY_TYPE_ADD_FRIEND);
         history.setEntity(entity);
-        history.setReceiver(receiver);
+        history.setReceiverId(receiver.getId());
         history.setReceiverPushId(receiver.getPushId());
         // 保存到历史记录表
         pushMapper.saveHistory(history);

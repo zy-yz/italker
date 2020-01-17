@@ -23,6 +23,24 @@
 
 
 
+    <insert id="insertUserFollow">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select REPLACE(UUID(),"-","")
+        </selectKey>
+        insert into tb_user_follow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        createAt,targetId,originId,updateAt,id,
+            <if test="alias != null">alias,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{createAt,jdbcType=TIMESTAMP},
+            #{targetId,jdbcType=VARCHAR}, #{originId,jdbcType=VARCHAR},#{updateAt,jdbcType=TIMESTAMP},
+            #{id,jdbcType=VARCHAR},
+            <if test="alias != null">#{alias,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+
     <update id="saveOrUpdate">
         update tb_user
         <set>
