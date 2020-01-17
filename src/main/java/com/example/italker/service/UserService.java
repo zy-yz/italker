@@ -1,15 +1,22 @@
 package com.example.italker.service;
 
+import com.example.italker.mapper.PushMapper;
 import com.example.italker.mapper.UserMapper;
 import com.example.italker.pojo.entity.User;
 //import com.example.italker.utils.SessionFac;
+import com.example.italker.pojo.entity.UserFollow;
+import com.example.italker.pojo.view.base.ResponseModel;
 import com.example.italker.utils.TextUtil;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.core.Response;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author zhaoyu
@@ -21,7 +28,7 @@ public class UserService {
     private UserMapper userMapper;
 
     @Autowired
-    private PushService pushService;
+    private PushMapper pushMapper;
 
     /**
      *
@@ -184,5 +191,53 @@ public class UserService {
             user = login(user);
         }
         return user;
+    }
+
+    /**
+     *
+     *@description: 获取我的联系人的列表
+     *@time: 2020/1/14
+     *@methodName:
+     */
+    public List<User> contacts(User self) {
+
+        //获取我关注的人
+        Set<UserFollow> flows = pushMapper.getFollowById(self.getId());
+        //flows = self.getFollowing();
+
+        //使用简写方式
+        return flows.stream()
+                .map(UserFollow::getTarget)
+                .collect(Collectors.toList());
+
+    }
+
+    /**
+     * 查询两个人是否已经关注
+     *
+     * @param origin 发起者
+     * @param target 被关注人
+     * @return 返回中间类UserFollow
+     */
+    public UserFollow getUserFollow(final User origin, final User target) {
+
+      return  userMapper.getUserFollow(origin.getId(),target.getId());
+
+    }
+
+    /**
+     * 搜索联系人的实现
+     *
+     * @param name 查询的name，允许为空
+     * @return 查询到的用户集合，如果name为空，则返回最近的用户
+     */
+    @SuppressWarnings("unchecked")
+    public List<User> search(String name) {
+        if (Strings.isNullOrEmpty(name)) {
+            // 保证不能为null的情况，减少后面的一下判断和额外的错误
+            name = "";
+        }
+        return userMapper.search(name);
+
     }
 }

@@ -1,7 +1,6 @@
 package com.example.italker.controller;
 
 
-import com.example.italker.Base.Base;
 import com.example.italker.pojo.card.MessageCard;
 import com.example.italker.pojo.entity.Group;
 import com.example.italker.pojo.entity.Message;
@@ -29,7 +28,7 @@ import javax.xml.soap.MessageFactory;
  */
 @RestController
 @RequestMapping("/account")
-public class MessageController extends Base {
+public class MessageController {
 
     @Autowired
     private MessageService messageService;
@@ -51,7 +50,7 @@ public class MessageController extends Base {
             return ResponseModel.buildParameterError();
         }
 
-        User self = getSelf();
+        User self = new User();
 
         // 查询是否已经在数据库中有了
         Message message =messageService.findById(model.getId());

@@ -34,6 +34,11 @@
             </if>
             <if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
             <if test="updateAt != null">updateAt = #{updateAt,jdbcType=TIMESTAMP},</if>
+            <if test="portrait != null">portrait = #{portrait,jdbcType=VARCHAR},</if>
+            <if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+            <if test="password != null">password = #{password,jdbcType=VARCHAR},</if>
+            <if test="phone != null">phone = #{phone,jdbcType=VARCHAR},</if>
+            <if test="sex != null">sex = #{sex,jdbcType=INTEGER},</if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
@@ -68,5 +73,21 @@
         select * from tb_user
         where
         token = #{token}
+    </select>
+    <select id="getUserFollow" resultType="com.example.italker.pojo.entity.UserFollow">
+        select *
+        from tb_user_follow tub
+        where tub.originId = #{originId}
+        and tub.targetId = #{targetId}
+        limit 1
+    </select>
+    <select id="search" resultType="com.example.italker.pojo.entity.User">
+        select *
+        from tb_user
+        where
+        lower(name) like concat('%',#{name},'%')
+        and portrait is not null
+        and description is not null
+        limit 20
     </select>
 </mapper>

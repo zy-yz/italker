@@ -40,4 +40,9 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
+    <select id="getFollowById" resultType="com.example.italker.pojo.entity.UserFollow">
+        select * from tb_user_follow tuo
+        inner join tb_user tu on tuo.targetId = tu.id
+        where tuo.originId = #{originId}
+    </select>
 </mapper>

@@ -5,9 +5,14 @@ import com.example.italker.pojo.view.base.ResponseModel;
 import com.example.italker.service.UserService;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.servlet.annotation.WebFilter;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
@@ -22,14 +27,16 @@ import java.security.Principal;
  * @Author: Rattan Pepper
  * @Date: 2020/1/11
  */
+
+@Component
 @Provider
 public class AuthRequestFilter implements ContainerRequestFilter {
 
     @Autowired
     private UserService userService;
 
-    /**
-     * 实现接口的过滤方法*/
+
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 

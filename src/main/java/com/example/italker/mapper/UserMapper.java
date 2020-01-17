@@ -2,6 +2,7 @@ package com.example.italker.mapper;
 
 
 import com.example.italker.pojo.entity.User;
+import com.example.italker.pojo.entity.UserFollow;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,4 +30,8 @@ public interface UserMapper {
     User loginFind(String account, String encodePassword);
 
     User findUserByToken(String token);
+
+    UserFollow getUserFollow(String originId, String targetId);
+
+    List<User> search(String name);
 }

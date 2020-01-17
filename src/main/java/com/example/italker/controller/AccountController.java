@@ -1,6 +1,5 @@
 package com.example.italker.controller;
 
-import com.example.italker.Base.Base;
 import com.example.italker.pojo.entity.User;
 import com.example.italker.pojo.view.account.AccountRspModel;
 import com.example.italker.pojo.view.account.LoginModel;
@@ -13,10 +12,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 @RequestMapping("/account")
-public class AccountController extends Base {
+public class AccountController {
 
     @Autowired
     private AccountService accountService;
@@ -25,12 +27,10 @@ public class AccountController extends Base {
     private UserService userService;
 
 
-
-
-
     @PostMapping(value = "/login")
     @ApiOperation(value = "登录")
     public ResponseModel<AccountRspModel> login(@RequestBody LoginModel model){
+
         if(!LoginModel.check(model)){
             return ResponseModel.buildParameterError();
         }
@@ -51,6 +51,7 @@ public class AccountController extends Base {
     @PostMapping(value = "/register")
     @ApiOperation(value = "注册")
     public ResponseModel<AccountRspModel> register(@RequestBody RegisterModel model) {
+
         if (!RegisterModel.check(model)) {
             // 返回参数异常
             return ResponseModel.buildParameterError();
@@ -90,11 +91,13 @@ public class AccountController extends Base {
     @ApiOperation(value = "绑定")
     //pushID 从URL 地址中获取
     public ResponseModel<AccountRspModel> bind (@RequestHeader String token,
-                                                @PathVariable String pushID){
+                                                @PathVariable String pushID, HttpServletRequest request, HttpServletResponse response){
+
         if(Strings.isNullOrEmpty(token)||Strings.isNullOrEmpty(pushID)){
             return ResponseModel.buildParameterError();
         }
         User user = userService.findByToken(token);
+
 
         if(user != null){
             return bind(user,pushID);
