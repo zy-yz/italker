@@ -54,7 +54,7 @@ public class TextUtil {
     }
 
 
-    public static String toJson(Object obj){
-        return GsonProvider.getGson().toJson(obj);
-    }
+//    public static String toJson(Object obj){
+//        return GsonProvider.getGson().toJson(obj);
+//    }
 }

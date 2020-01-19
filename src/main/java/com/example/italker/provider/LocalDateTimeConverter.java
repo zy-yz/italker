@@ -1,6 +1,7 @@
 package com.example.italker.provider;
 
 import com.google.gson.*;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.Locale;
  * <p>
  * 该工具类主要是为了解决LocalDateTime与Json字符串相互转换的问题
  */
+@Component
 public class LocalDateTimeConverter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     /**
      * 时间转换的格式为：yyyy-MM-dd'T'HH:mm:ss.SSS

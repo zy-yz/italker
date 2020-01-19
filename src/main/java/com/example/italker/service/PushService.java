@@ -48,7 +48,8 @@ public class PushService {
         //消息卡片用于发送
         MessageCard card = new MessageCard(message);
         //要推送的字符串
-        String entity = TextUtil.toJson(card);
+        //String entity = TextUtil.toJson(card);
+        String entity = JSON.toJSONString(card);
 
         //发送者
         PushDispatcher dispatcher = new PushDispatcher();
@@ -226,7 +227,8 @@ public class PushService {
 
             //给每个成员的信息卡片
             GroupMemberCard memberCard = new GroupMemberCard(member);
-            String entity = TextUtil.toJson(memberCard);
+            //String entity = TextUtil.toJson(memberCard);
+            String entity = JSON.toJSONString(memberCard);
 
             //历史记录表字段建立
             PushHistory history = new PushHistory();
@@ -271,7 +273,8 @@ public class PushService {
         List<PushHistory> histories = new ArrayList<>();
 
         //当前新增的用户的集合的json字符串
-        String entity = TextUtil.toJson(insertCards);
+        //String entity = TextUtil.toJson(insertCards);
+        String entity = JSON.toJSONString(insertCards);
 
         // 进行循环添加，给oldMembers每一个老的用户构建一个消息，消息的内容为新增的用户的集合
         // 通知的类型是：群成员添加了的类型
@@ -315,8 +318,8 @@ public class PushService {
         PushDispatcher dispatcher = new PushDispatcher();
         PushModel pushModel = new PushModel()
                 .add(history.getEntityType(), history.getEntity());
-        dispatcher.add(receiver, pushModel);
-        dispatcher.submit();
+       /**最后实现力推*/// dispatcher.add(receiver, pushModel);
+       // dispatcher.submit();
 
     }
 }

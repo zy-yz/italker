@@ -1,5 +1,6 @@
 package com.example.italker.pojo.view.base;
 
+import com.alibaba.fastjson.JSON;
 import com.example.italker.utils.TextUtil;
 import com.google.gson.annotations.Expose;
 
@@ -43,7 +44,8 @@ public class PushModel {
         if(entities.size() == 0){
             return null;
         }
-        return TextUtil.toJson(entities);
+        //return TextUtil.toJson(entities);
+        return JSON.toJSONString(entities);
     }
 
 
