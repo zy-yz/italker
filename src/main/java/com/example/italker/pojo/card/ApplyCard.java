@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import java.time.LocalDateTime;
 
+//aaa
 /**
  * @Description: 申请请求的Card, 用于推送一个申请请求
  * @Email: 1090712762@qq.com

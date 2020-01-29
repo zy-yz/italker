@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
  * @Author: Rattan Pepper
  * @Date: 2020/1/7
  */
-public class GroupMembeUpdateModel {
+public class GroupMemberUpdateModel {
     @Expose
     private String alias;// 别名／备注
     @Expose
@@ -41,7 +41,7 @@ public class GroupMembeUpdateModel {
         this.groupId = groupId;
     }
 
-    public static boolean check(GroupMembeUpdateModel model) {
+    public static boolean check(GroupMemberUpdateModel model) {
         return ((!Strings.isNullOrEmpty(model.alias) || model.isAdmin == true)
                 && !Strings.isNullOrEmpty(model.groupId));
     }

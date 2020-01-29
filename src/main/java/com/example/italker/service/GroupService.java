@@ -4,6 +4,7 @@ import com.example.italker.mapper.GroupMapper;
 import com.example.italker.pojo.entity.Group;
 import com.example.italker.pojo.entity.GroupMember;
 import com.example.italker.pojo.entity.User;
+import com.example.italker.pojo.view.group.GroupCreateModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,23 @@ public class GroupService {
         @SuppressWarnings("unchecked")
         List<GroupMember> members = groupMapper.getMembers(group);
         return new HashSet<>(members);
+    }
+
+    public GroupMember getMember(String id, String id1) {
+    }
+
+    public List<Group> search(String name) {
+    }
+
+    public Group create(User creator, GroupCreateModel model, List<User> users) {
+    }
+
+    public Group findByName(String name) {
+    }
+
+    public Set<GroupMember> getMembers(User self) {
+    }
+
+    public Set<GroupMember> addMembers(Group group, List<User> insertUsers) {
     }
 }
