@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.italker.mapper.GroupMapper">
+    <insert id="addMembers"></insert>
+    <insert id="saveGroup"></insert>
+    <insert id="saveOwnerMember"></insert>
+    <insert id="saveMember"></insert>
     <select id="findById" resultType="com.example.italker.pojo.entity.Group">
         select * from tb_group
         where id = #{groupId}
@@ -10,4 +14,13 @@
         select * from tb_group_member
         where group = #{group}
     </select>
+    <select id="findByName" resultType="com.example.italker.pojo.entity.Group">
+        select * from tb_group
+        where name = #{name}
+    </select>
+    <select id="getMembersUser" resultType="com.example.italker.pojo.entity.GroupMember">
+
+    </select>
+    <select id="getMember" resultType="com.example.italker.pojo.entity.GroupMember"></select>
+    <select id="search" resultType="com.example.italker.pojo.entity.Group"></select>
 </mapper>

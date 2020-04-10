@@ -40,6 +40,13 @@ public class GroupMember {
     private Group group;
     private String groupId;
 
+
+
+    public GroupMember(User user, Group group) {
+        this.user = user;
+        this.group = group;
+    }
+
     /*@Id
     @PrimaryKeyJoinColumn
     @GeneratedValue(generator = "uuid")

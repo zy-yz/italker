@@ -29,7 +29,15 @@ public class Group {
     private LocalDateTime createAt= LocalDateTime.now();
     private LocalDateTime updateAt= LocalDateTime.now();
     private User owner;
-    private String ownerId;;
+    private String ownerId;
+
+
+    public Group(User owner, GroupCreateModel model) {
+        this.owner = owner;
+        this.name = model.getName();
+        this.description = model.getDesc();
+        this.picture = model.getPicture();
+    }
 
    /* // 这是一个主键
     @Id
