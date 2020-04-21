@@ -103,20 +103,21 @@ public class UserController{
         // 判断这些人是否有我已经关注的人，
         // 如果有，则返回的关注状态中应该已经设置好状态
 
-        // 拿出我的联系人
-        final List<User> contacts = userService.contacts(self);
+        //拿出我的联系人
+        List<User> contacts = userService.contacts(self);
 
         //把User -> UserCard
         List<UserCard> userCards = searchUsers.stream()
-                .map(user ->{
-                    //判断这个人是不是我自己，或者是我联系中的人
-                    boolean isFollow = user.getId().equalsIgnoreCase(self.getId())
-                            //进行联系人的任意匹配,匹配其中的ID字段
-                    || contacts.stream().anyMatch(
-                            contactUser -> contactUser.getId()
-                            .equalsIgnoreCase(user.getId())
-                    );
-                    return new UserCard(user,isFollow);
+                .map(user -> {
+                    //判断这个人是不是我，或者是否在我的联系人中
+                    boolean isFollow = user.getId().equalsIgnoreCase(self.getId()) ||
+                            //进行联系人的任意匹配，匹配其中的Id字段
+                            contacts
+                                    .stream()
+                                    .anyMatch(contactUser ->
+                                            contactUser.getId()
+                                                    .equalsIgnoreCase(user.getId()));
+                    return new UserCard(user, isFollow);
                 }).collect(Collectors.toList());
 
         //返回

@@ -40,9 +40,54 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <select id="getFollowById" resultType="com.example.italker.pojo.entity.UserFollow">
-        select * from tb_user_follow tuo
-        inner join tb_user tu on tuo.targetId = tu.id
-        where tuo.originId = #{originId}
-    </select>
+<!--    <select id="getFollowById" resultType="com.example.italker.pojo.entity.UserFollow">-->
+<!--        select * from tb_user_follow tuo-->
+<!--        inner join tb_user tu on tuo.targetId = tu.id-->
+<!--        where tuo.originId = #{originId}-->
+<!--    </select>-->
+
+    <resultMap id="FollowById" type="com.example.italker.pojo.entity.UserFollow">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="originId" jdbcType="VARCHAR" property="originId"/>
+        <result column="targetId" jdbcType="VARCHAR" property="targetId"/>
+        <collection property="origin" ofType="com.example.italker.pojo.entity.User">
+            <id column="id" jdbcType="VARCHAR" property="id" />
+            <result column="id" jdbcType="VARCHAR" property="id" />
+            <result column="name" jdbcType="VARCHAR" property="name" />
+            <result column="phone" jdbcType="VARCHAR" property="phone" />
+            <result column="password" jdbcType="VARCHAR" property="password" />
+            <result column="portrait" jdbcType="VARCHAR" property="portrait" />
+            <result column="description" jdbcType="VARCHAR" property="description" />
+            <result column="token" jdbcType="VARCHAR" property="token" />
+            <result column="pushId" jdbcType="VARCHAR" property="pushId" />
+            <result column="createAt" jdbcType="TIMESTAMP" property="createAt" />
+            <result column="updateAt" jdbcType="TIMESTAMP" property="updateAt" />
+            <result column="sex" jdbcType="INTEGER" property="sex" />
+        </collection>
+        <collection property="target" ofType="com.example.italker.pojo.entity.User">
+            <id column="id" jdbcType="VARCHAR" property="id" />
+            <result column="id" jdbcType="VARCHAR" property="id" />
+            <result column="name" jdbcType="VARCHAR" property="name" />
+            <result column="phone" jdbcType="VARCHAR" property="phone" />
+            <result column="password" jdbcType="VARCHAR" property="password" />
+            <result column="portrait" jdbcType="VARCHAR" property="portrait" />
+            <result column="description" jdbcType="VARCHAR" property="description" />
+            <result column="token" jdbcType="VARCHAR" property="token" />
+            <result column="pushId" jdbcType="VARCHAR" property="pushId" />
+            <result column="createAt" jdbcType="TIMESTAMP" property="createAt" />
+            <result column="updateAt" jdbcType="TIMESTAMP" property="updateAt" />
+            <result column="sex" jdbcType="INTEGER" property="sex" />
+        </collection>
+    </resultMap>
+
+
+        <select id="getFollowById" resultMap="FollowById">
+            select * from tb_user_follow tuo
+            inner join tb_user tu on tuo.targetId = tu.id
+            where tuo.originId = #{originId}
+        </select>
+
+
+
+
 </mapper>

@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -201,14 +198,22 @@ public class UserService {
      */
     public List<User> contacts(User self) {
 
+
         //获取我关注的人
         Set<UserFollow> flows = pushMapper.getFollowById(self.getId());
-        //flows = self.getFollowing();
+        userMapper.findUserById(self.getId());
+
+      //  flows = self.getFollowing();
+
+
+
 
         //使用简写方式
         return flows.stream()
                 .map(UserFollow::getTarget)
                 .collect(Collectors.toList());
+
+
 
     }
 
