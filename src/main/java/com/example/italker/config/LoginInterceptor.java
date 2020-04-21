@@ -32,7 +32,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         // 直接返回一个账户需要登录的Model
         ResponseModel model = ResponseModel.buildAccountError();
-        ;
 
         //业务代码
         return true;
