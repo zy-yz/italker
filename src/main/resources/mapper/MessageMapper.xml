@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.italker.mapper.MessageMapper">
-    <update id="save"></update>
 
-    <select id="findById" resultType="com.example.italker.pojo.entity.Message">
+    <!---插入消息-->
+    <insert id="save">
+        insert into tb_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            attach, content, createdAt, groupId, receiverId,
+            senderId, type, updatedAt, id
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{attach,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},
+            #{createAt,jdbcType=TIMESTAMP}, #{groupId,jdbcType=VARCHAR},
+            #{receiverId,jdbcType=VARCHAR},#{senderId,jdbcType=VARCHAR},
+            #{type,jdbcType=INTEGER},now(),
+            #{id,jdbcType=VARCHAR}
+        </trim>
+    </insert>
+
+    <select id="findByIdMessage" resultType="com.example.italker.pojo.entity.Message">
+        select *
+            from
+                tb_message message0_
+            left outer join
+                tb_group group1_
+                    on message0_.groupId=group1_.id
+            left outer join
+                tb_user user2_
+                    on group1_.ownerId=user2_.id
+            left outer join
+                tb_user user3_
+                    on message0_.receiverId=user3_.id
+            inner join
+                tb_user user4_
+                    on message0_.senderId=user4_.id
+            where
+                message0_.id=#{id}
+
+    </select>
+    <select id="getMessage" resultType="com.example.italker.pojo.entity.Message">
         select * from tb_message
         where id = #{id}
     </select>
-    <select id="getMessage" resultType="com.example.italker.pojo.entity.Message"></select>
 </mapper>

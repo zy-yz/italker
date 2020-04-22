@@ -57,6 +57,7 @@ public class Message {
         this.type = model.getType();
 
         this.sender = sender;
+        this.senderId = sender.getId();
         this.receiver = receiver;
     }
 
@@ -68,6 +69,7 @@ public class Message {
         this.type = model.getType();
 
         this.sender = sender;
+        this.senderId = sender.getId();
         this.group = group;
     }
 

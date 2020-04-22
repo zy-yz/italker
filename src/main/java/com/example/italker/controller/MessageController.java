@@ -14,9 +14,11 @@ import com.example.italker.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.soap.MessageFactory;
 
 
@@ -27,7 +29,7 @@ import javax.xml.soap.MessageFactory;
  * @Date: 2020/1/14
  */
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/message")
 public class MessageController {
 
     @Autowired
@@ -45,15 +47,16 @@ public class MessageController {
     /**发送一条消息到服务器*/
     @PostMapping(value = "")
     @ApiOperation(value = "登录")
-    public ResponseModel<MessageCard> pushMessage(MessageCreateModel model) {
+    public ResponseModel<MessageCard> pushMessage(@RequestBody  MessageCreateModel model, HttpServletRequest request) {
         if (!MessageCreateModel.check(model)) {
             return ResponseModel.buildParameterError();
         }
 
         User self = new User();
+        self = (User)request.getAttribute("aself");
 
         // 查询是否已经在数据库中有了
-        Message message =messageService.findById(model.getId());
+        Message message =messageService.findByIdMessage(model.getId());
         if(message != null){
             //正常返回
             return ResponseModel.buildOk(new MessageCard(message));

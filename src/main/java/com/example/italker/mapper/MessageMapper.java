@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public interface MessageMapper {
 
 
-    Message findById(String id);
+    Message findByIdMessage(String id);
 
     void save(Message message);
 

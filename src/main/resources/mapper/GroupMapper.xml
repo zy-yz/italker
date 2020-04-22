@@ -21,6 +21,14 @@
     <select id="getMembersUser" resultType="com.example.italker.pojo.entity.GroupMember">
 
     </select>
-    <select id="getMember" resultType="com.example.italker.pojo.entity.GroupMember"></select>
+    <select id="getMember" resultType="com.example.italker.pojo.entity.GroupMember">
+         select *
+            from
+                tb_group_member
+            where
+               userId=#{userId}
+                and groupId = #{groupId}
+                limit 20
+    </select>
     <select id="search" resultType="com.example.italker.pojo.entity.Group"></select>
 </mapper>

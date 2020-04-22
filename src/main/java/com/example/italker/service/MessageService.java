@@ -16,9 +16,9 @@ public class MessageService {
 
     /**
      * 查询某一个信息*/
-    public Message findById(String id) {
+    public Message findByIdMessage(String id) {
 
-        return messageMapper.findById(id);
+        return messageMapper.findByIdMessage(id);
     }
 
     /**添加一条普通消息*/
