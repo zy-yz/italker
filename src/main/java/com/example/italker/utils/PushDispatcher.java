@@ -8,6 +8,7 @@ import com.gexin.rp.sdk.base.IPushResult;
 import com.gexin.rp.sdk.base.impl.SingleMessage;
 import com.gexin.rp.sdk.base.impl.Target;
 import com.gexin.rp.sdk.http.IGtPush;
+import com.gexin.rp.sdk.template.NotificationTemplate;
 import com.gexin.rp.sdk.template.TransmissionTemplate;
 import com.google.common.base.Strings;
 
@@ -71,7 +72,7 @@ public class PushDispatcher {
      */
     private BatchBean buildMessage(String clientId, String text) {
         // 透传消息，不是通知栏显示，而是在MessageReceiver收到
-        TransmissionTemplate template = new TransmissionTemplate();
+        NotificationTemplate template = new NotificationTemplate();
         template.setAppId(appId);
         template.setAppkey(appKey);
         template.setTransmissionContent(text);

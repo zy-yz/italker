@@ -41,11 +41,17 @@ public class GroupMember {
     private String groupId;
 
 
+    public GroupMember(){
+    }
 
     public GroupMember(User user, Group group) {
         this.user = user;
         this.group = group;
+        this.userId = user.getId();
+        this.groupId = group.getId();
     }
+
+
 
     /*@Id
     @PrimaryKeyJoinColumn

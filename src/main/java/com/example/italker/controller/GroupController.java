@@ -1,6 +1,7 @@
 package com.example.italker.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.italker.pojo.card.ApplyCard;
 import com.example.italker.pojo.card.GroupCard;
 import com.example.italker.pojo.card.GroupMemberCard;
@@ -16,15 +17,16 @@ import com.example.italker.service.GroupService;
 import com.example.italker.service.PushService;
 import com.example.italker.service.UserService;
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DefaultValue;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /** 群组的接口的入口
@@ -66,8 +68,12 @@ public class GroupController {
             return ResponseModel.buildHaveNameError();
         }
         List<User> users = new ArrayList<>();
-        for (String s : model.getUsers()) {
-            User user = userService.findById(s);
+        for (Object s : model.getUsers()) {
+            Gson gson = new Gson();
+            String json = gson.toJson(s);
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            String r = jsonObject.getString("id");
+            User user = userService.findById(r);
             if (user == null) {
                 continue;
             }
@@ -84,7 +90,7 @@ public class GroupController {
             return ResponseModel.buildServiceError();
         }
         // 拿管理员的信息（自己的信息）
-        GroupMember creatorMember = groupService.getMember(creator.getId(),group.getId());
+        GroupMember creatorMember =groupService.getMember(creator.getId(),group.getId());
         if (creatorMember == null) {
             // 服务器异常
             return ResponseModel.buildServiceError();
@@ -96,12 +102,15 @@ public class GroupController {
             //服务器异常
             return ResponseModel.buildServiceError();
         }
+        /**这里是不能注释的*/
         members = members.stream()
                 .filter(groupMember -> !groupMember.getId().equalsIgnoreCase(creatorMember.getId()))
                 .collect(Collectors.toSet());
 
         //开始发起推送
-      /**推送的注释了，后面*/  //pushservice.pushJoinGroup(members);
+      pushservice.pushJoinGroup(members);
+
+        creatorMember.setGroup(group);
 
         return ResponseModel.buildOk(new GroupCard(creatorMember));
 
@@ -129,7 +138,7 @@ public class GroupController {
     @GetMapping(value = "/list/{date}")
     @ApiOperation(value = "拉取自己当前的群的列表" +
             "时间字段不传递，则返回全部当前的群列表；有时间，则返回这个时间之后的加入的群")
-    public ResponseModel<List<GroupCard>> list(@PathVariable String dateStr,
+    public ResponseModel<List<GroupCard>> list(@DefaultValue("") @PathVariable("date") String dateStr,
                                                HttpServletRequest request){
 
         User self = (User)request.getAttribute("aself");
@@ -159,7 +168,7 @@ public class GroupController {
 
     }
 
-    @GetMapping(value = "/{groupId}")
+    @GetMapping(value = "/{id}")
     @ApiOperation(value = "获取一个群的信息,必须是群成员")
     public ResponseModel<GroupCard> getGroup(@PathVariable String id,
                                              HttpServletRequest request) {
@@ -172,11 +181,14 @@ public class GroupController {
             return ResponseModel.buildNotFoundGroupError(null);
         }
 
+        Group group = groupService.getGroup(id);
+        member.setGroup(group);
+
         return ResponseModel.buildOk(new GroupCard(member));
 
     }
 
-    @GetMapping(value = "/{groupId}/member")
+    @GetMapping(value = "/{groupId}/members")
     @ApiOperation(value = "拉取一个群的所有成员，你必须是成员之一")
     public ResponseModel<List<GroupMemberCard>> members(@PathVariable String groupId,
                                                         HttpServletRequest request){
@@ -212,11 +224,13 @@ public class GroupController {
             "此时会创建一个加入的申请，并写入表；然后会给管理员发送消息\n" +
             "管理员同意，其实就是调用添加成员的接口把对应的用户添加进去")
     public ResponseModel<ApplyCard> join(@PathVariable String groupId) {
+
+
         return null;
     }
 
 
-    @GetMapping(value = "/member/{memberId}")
+    @PostMapping(value = "/member/{memberId}")
     @ApiOperation(value = "更改成员信息，请求的人要么是管理员，要么就是成员本人")
     public ResponseModel<GroupMemberCard> modifyMember(@PathVariable String memberId,
                                                        @RequestBody GroupMemberUpdateModel model) {
@@ -257,9 +271,13 @@ public class GroupController {
                 .collect(Collectors.toSet());
 
         List<User> insertUsers = new ArrayList<>();
-        for (String s:model.getUsers()){
+        for (Object s:model.getUsers()){
+            Gson gson = new Gson();
+            String json = gson.toJson(s);
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            String r = jsonObject.getString("id");
             //找人
-            User user = userService.findById(s);
+            User user = userService.findById(r);
             if(user == null){
                 continue;
                 //已经在群里了
@@ -285,11 +303,11 @@ public class GroupController {
                 .collect(Collectors.toList());
 
         //通知
-        //1.通知新增的成员，你呗加入了XXX群
-    /**最后完善之后*/   // pushservice.pushGroupMemberAdd(oldMembers,insertCards);
+        //1.通知新增的成员，你呗加入了XXX
+     pushservice.pushGroupMemberAdd(oldMembers,insertCards);
 
         //2.通知群中老的成员,有XXX，XXX加入群
-        /**最后完善之后*/   //   pushservice.pushGroupMemberAdd(oldMembers,insertCards);
+           pushservice.pushGroupMemberAdd(oldMembers,insertCards);
 
         return ResponseModel.buildOk(insertCards);
 

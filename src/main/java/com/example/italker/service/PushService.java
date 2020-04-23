@@ -3,6 +3,7 @@ package com.example.italker.service;
 
 import com.alibaba.fastjson.JSON;
 import com.example.italker.mapper.PushMapper;
+import com.example.italker.mapper.UserMapper;
 import com.example.italker.pojo.card.GroupMemberCard;
 import com.example.italker.pojo.card.MessageCard;
 import com.example.italker.pojo.card.UserCard;
@@ -30,6 +31,9 @@ public class PushService {
 
     @Autowired
     private PushMapper pushMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private UserService userService;
@@ -220,7 +224,8 @@ public class PushService {
         List<PushHistory> histories = new ArrayList<>();
 
         for (GroupMember member : members){
-            User receiver = member.getUser();
+            //User receiver = member.getUser();
+            User receiver = userMapper.findUserById(member.getUserId());
             if(receiver == null){
                 return;
             }
@@ -249,9 +254,10 @@ public class PushService {
         }
 
         //保存到数据库中
-        for (PushHistory history : histories){
-            pushMapper.saveOrUpdate(history);
-        }
+        /**修改对象*/
+//        for (PushHistory history : histories){
+//            pushMapper.saveHistory(history);
+//        }
         //提交发送
         dispatcher.submit();
     }

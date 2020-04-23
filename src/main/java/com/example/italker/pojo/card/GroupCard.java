@@ -43,7 +43,8 @@ public class GroupCard {
         this.name = group.getName();
         this.desc = group.getDescription();
         this.picture = group.getPicture();
-        this.ownerId = group.getOwner().getId();
+        //this.ownerId = group.getOwner().getId();
+        this.ownerId = group.getOwnerId();
         this.notifyLevel = member != null ? member.getNotifyLevel() : 0;
         this.joinAt = member != null ? member.getCreateAt() : null;
         this.modifyAt = group.getUpdateAt();

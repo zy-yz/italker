@@ -2,23 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.italker.mapper.GroupMapper">
     <insert id="addMembers"></insert>
-    <insert id="saveGroup"></insert>
-    <insert id="saveOwnerMember"></insert>
-    <insert id="saveMember"></insert>
+
     <select id="findById" resultType="com.example.italker.pojo.entity.Group">
         select * from tb_group
         where id = #{groupId}
-
     </select>
     <select id="getMembers" resultType="com.example.italker.pojo.entity.GroupMember">
         select * from tb_group_member
-        where group = #{group}
+        where groupId = #{groupId}
     </select>
     <select id="findByName" resultType="com.example.italker.pojo.entity.Group">
         select * from tb_group
         where name = #{name}
     </select>
     <select id="getMembersUser" resultType="com.example.italker.pojo.entity.GroupMember">
+            select *
+            from tb_group_member
+            where
+            userId=#{id}
+            and groupId=#{groupId}
+            limit 15
+
 
     </select>
     <select id="getMember" resultType="com.example.italker.pojo.entity.GroupMember">
@@ -28,7 +32,59 @@
             where
                userId=#{userId}
                 and groupId = #{groupId}
-                limit 20
+                limit 1
     </select>
-    <select id="search" resultType="com.example.italker.pojo.entity.Group"></select>
+    <select id="search" resultType="com.example.italker.pojo.entity.Group">
+        select *
+    from
+        tb_group
+    where
+         lower(name) like concat('%',#{name},'%')
+          limit 15
+    </select>
+    <select id="getGroup" resultType="com.example.italker.pojo.entity.Group">
+        select * from tb_group
+        where id = #{id}
+    </select>
+
+    <insert id="saveGroup" >
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select REPLACE(UUID(),"-","")
+        </selectKey>
+        insert into tb_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,createAt,description,name,ownerId,picture,updateAt
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            #{createAt,jdbcType=TIMESTAMP},
+            #{description,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{ownerId,jdbcType=VARCHAR},
+            #{picture,jdbcType=VARCHAR},
+            #{updateAt,jdbcType=TIMESTAMP}
+        </trim>
+    </insert>
+
+
+    <insert id="saveMember">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select REPLACE(UUID(),"-","")
+        </selectKey>
+        insert into tb_group_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,createAt,groupId,notifyLevel,permissionType,updateAt,userId,
+            <if test="alias != null">alias,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            #{createAt,jdbcType=TIMESTAMP},
+            #{groupId,jdbcType=VARCHAR},
+            #{notifyLevel,jdbcType=INTEGER},
+            #{permissionType,jdbcType=INTEGER},
+            #{updateAt,jdbcType=TIMESTAMP},
+            #{userId,jdbcType=VARCHAR},
+            <if test="alias != null">#{alias,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
 </mapper>

@@ -32,8 +32,8 @@ public class GroupMemberCard {
         this.alias = member.getAlias();
         this.isAdmin = member.getPermissionType() == GroupMember.PERMISSION_TYPE_ADMIN;
         this.isOwner = member.getPermissionType() == GroupMember.PERMISSION_TYPE_ADMIN_SU;
-        this.userId = member.getUser().getId();
-        this.groupId = member.getGroup().getId();
+        this.userId = member.getUserId();
+        this.groupId = member.getGroupId();
         this.modifyAt = member.getUpdateAt();
     }
 

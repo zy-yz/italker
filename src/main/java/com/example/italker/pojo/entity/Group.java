@@ -37,7 +37,9 @@ public class Group {
         this.name = model.getName();
         this.description = model.getDesc();
         this.picture = model.getPicture();
+        this.ownerId = owner.getId();
     }
+    public Group(){}
 
    /* // 这是一个主键
     @Id

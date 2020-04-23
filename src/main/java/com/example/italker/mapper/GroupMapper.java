@@ -13,22 +13,24 @@ public interface GroupMapper {
     /**通过ID拿到群Model*/
     Group findById(String groupId);
 
-    List<GroupMember> getMembers(Group group);
+    List<GroupMember> getMembers(String  groupId);
 
     void addMembers(GroupMember member);
 
     Group findByName(String toLowerCase);
 
-    List<GroupMember> getMembersUser(User self);
+    List<GroupMember> getMembersUser(String id,String groupId);
     
 
-    void saveGroup(Group group);
+    Integer saveGroup(Group group);
 
-    void saveOwnerMember(GroupMember ownerMember);
+    void saveMember(GroupMember ownerMember);
 
-    void saveMember(GroupMember member);
+    //void saveMember(GroupMember member);
 
     GroupMember getMember(String userId, String groupId);
 
     List<Group> search(String name);
+
+    Group getGroup(String id);
 }

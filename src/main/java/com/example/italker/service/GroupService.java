@@ -43,29 +43,35 @@ public class GroupService {
     //获取一个群的所有成员
     public Set<GroupMember> getMembers(Group group) {
         @SuppressWarnings("unchecked")
-        List<GroupMember> members = groupMapper.getMembers(group);
+        List<GroupMember> members = groupMapper.getMembers(group.getId());
         return new HashSet<>(members);
     }
 
     //查询一个人加入的所有群
     public Set<GroupMember> getMembers(User self) {
         @SuppressWarnings("unchecked")
-        List<GroupMember> members = groupMapper.getMembersUser(self);
+        Group group = groupMapper.findById(self.getId());
+        List<GroupMember> members = null;
+        if (group==null){
+            return (Set<GroupMember>) members;
+        }
+        members = groupMapper.getMembersUser(self.getId(),group.getId());
         return new HashSet<>(members);
     }
 
     public Group create(User creator, GroupCreateModel model, List<User> users) {
         Group group = new Group(creator,model);
 
-        groupMapper.saveGroup(group);
+        Integer id =  groupMapper.saveGroup(group);
+
 
         GroupMember ownerMember = new GroupMember(creator, group);
+
         //设置创建者超级管理员权限
-
         ownerMember.setPermissionType(GroupMember.PERMISSION_TYPE_ADMIN_SU);
-        //保存，还没有提交到数据库
 
-        groupMapper.saveOwnerMember(ownerMember);
+
+        groupMapper.saveMember(ownerMember);
 
         for (User user : users) {
             GroupMember member = new GroupMember(user, group);
@@ -103,9 +109,13 @@ public class GroupService {
         for (User user : insertUsers) {
             GroupMember member = new GroupMember(user, group);
             // 保存，并没有提交到数据库
-            groupMapper.addMembers(member);
+            groupMapper.saveMember(member);
             members.add(member);
         }
         return members;
+    }
+
+    public Group getGroup(String id) {
+        return groupMapper.getGroup(id);
     }
 }

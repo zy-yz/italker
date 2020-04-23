@@ -8,6 +8,7 @@ import com.example.italker.pojo.entity.UserFollow;
 import com.example.italker.pojo.view.base.ResponseModel;
 import com.example.italker.utils.TextUtil;
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +73,7 @@ public class UserService {
     public User findById(String id){
         return userMapper.findUserById(id);
     }
+
 
     public User register(String account,String password,String name){
         //去除账户中的首位空格

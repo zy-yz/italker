@@ -19,7 +19,7 @@ public class GroupCreateModel {
     @Expose
     private String picture;
     @Expose
-    private Set<String> users = new HashSet<>();
+    private Set<Object> users = new HashSet<>();
 
     public String getName() {
         return name;
@@ -45,11 +45,11 @@ public class GroupCreateModel {
         this.picture = picture;
     }
 
-    public Set<String> getUsers() {
+    public Set<Object> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<String> users) {
+    public void setUsers(Set<Object> users) {
         this.users = users;
     }
 
