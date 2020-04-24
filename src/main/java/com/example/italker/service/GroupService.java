@@ -5,6 +5,7 @@ import com.example.italker.pojo.entity.Group;
 import com.example.italker.pojo.entity.GroupMember;
 import com.example.italker.pojo.entity.User;
 import com.example.italker.pojo.view.group.GroupCreateModel;
+import com.example.italker.pojo.view.group.GroupMemberUpdateModel;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,5 +118,25 @@ public class GroupService {
 
     public Group getGroup(String id) {
         return groupMapper.getGroup(id);
+    }
+
+    /**
+     * @Description     修改群成员的信息
+     * @param [memberId, model, isAmind]
+     * @return com.example.italker.pojo.entity.GroupMember
+     */
+    public GroupMember updateMember(String memberId, GroupMemberUpdateModel model, boolean isAdmin) {
+
+        GroupMember member = groupMapper.getMemberById(memberId,model.getGroupId());
+
+        member.setAlias(model.getAlias());
+        //1.在参数中修改了权限 同时你是普通权限 同时申请接口的用户有对应的权限 满足三者才能修改权限
+        if (model.isAdmin() && member.getPermissionType() == GroupMember.NOTIFY_LEVEL_NONE && isAdmin) {
+            member.setPermissionType(GroupMember.PERMISSION_TYPE_ADMIN);
+        }
+        groupMapper.updateMember(member);
+        return groupMapper.getMemberById(memberId,model.getGroupId());
+
+
     }
 }

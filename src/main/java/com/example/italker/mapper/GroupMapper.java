@@ -15,7 +15,6 @@ public interface GroupMapper {
 
     List<GroupMember> getMembers(String  groupId);
 
-    void addMembers(GroupMember member);
 
     Group findByName(String toLowerCase);
 
@@ -30,7 +29,11 @@ public interface GroupMapper {
 
     GroupMember getMember(String userId, String groupId);
 
+    GroupMember getMemberById(String id, String groupId);
+
     List<Group> search(String name);
 
     Group getGroup(String id);
+
+    void updateMember(GroupMember member);
 }

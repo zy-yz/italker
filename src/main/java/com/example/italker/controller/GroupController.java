@@ -233,8 +233,69 @@ public class GroupController {
     @PostMapping(value = "/member/{memberId}")
     @ApiOperation(value = "更改成员信息，请求的人要么是管理员，要么就是成员本人")
     public ResponseModel<GroupMemberCard> modifyMember(@PathVariable String memberId,
-                                                       @RequestBody GroupMemberUpdateModel model) {
-        return null;
+                                                       @RequestBody GroupMemberUpdateModel model,HttpServletRequest request) {
+
+        /*1.判断参数*/
+
+        if (!GroupMemberUpdateModel.check(model)) {
+            return ResponseModel.buildParameterError();
+        }
+
+        //拿到我的信息
+        User self = (User)request.getAttribute("aself");
+
+        //获取要修改群成员在那个群的信息需要修改
+        Group group = groupService.findById(model.getGroupId());
+
+
+        if (group == null) {
+            return ResponseModel.buildParameterError();
+        }
+        /*2.校验参数*/
+
+        //得到当前群下的所有群成员信息
+        Set<GroupMember> members = groupService.getMembers(group);
+
+        //拿到self在群成员的名片
+        GroupMember selfMember = groupService.getMember(self.getId(),model.getGroupId());
+
+        if (selfMember == null) {
+            return ResponseModel.buildParameterError();
+        }
+
+        List<String> memberIds = members.stream().map(GroupMember::getId).collect(Collectors.toList());
+
+        boolean isAlready = false;
+
+        for (String id : memberIds){
+            if (id.equalsIgnoreCase(memberId)) {
+                isAlready  = true;
+            }
+        }
+        if (!isAlready) {
+            return ResponseModel.buildParameterError();
+        }
+        //1.自己只能修改自己的信息 只能修改自己在群中的别名
+        //2.如果是管理员或是创建者 都能修改他人的权限和别名
+        //权限错误 如果你是普通权限 同时 传入的memberId不是你自己的群成员id 那么就证明你想改别人的 ,返回权限不足
+
+        if (selfMember.getPermissionType() == GroupMember.PERMISSION_TYPE_NONE && !selfMember.getId().equalsIgnoreCase(memberId)) {
+            return ResponseModel.buildNoPermissionError();
+        }
+
+        /**修改信息*/
+        boolean isAdmin = false;
+
+        if(selfMember.getPermissionType() != GroupMember.NOTIFY_LEVEL_NONE) {
+            isAdmin = true;
+        }
+        GroupMember member = groupService.updateMember(memberId,model,isAdmin);
+
+        if (member == null) {
+            return ResponseModel.buildServiceError();
+        }
+        //返回最新的GroupMemberCard
+        return ResponseModel.buildOk(new GroupMemberCard(member));
     }
 
     @PostMapping(value = "/{groupId}/member")
