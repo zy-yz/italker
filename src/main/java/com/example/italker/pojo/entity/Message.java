@@ -59,6 +59,7 @@ public class Message {
         this.sender = sender;
         this.senderId = sender.getId();
         this.receiver = receiver;
+        this.receiverId = receiver.getId();
     }
 
     // 发送给群的构造函数

@@ -76,6 +76,11 @@ public class PushService {
             //接受者当前的设备推送Id
             history.setReceiverPushId(receiver.getPushId());
 
+            history.setSender(sender);
+            history.setSenderId(sender.getId());
+
+            history.setReceiverId(receiver.getId());
+
             //推送真实的Model
             PushModel pushModel = new PushModel();
             //每一条历史记录都是独立的,可以单独发送

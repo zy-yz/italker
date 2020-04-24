@@ -71,14 +71,15 @@ public class PushDispatcher {
      * @return BatchBean
      */
     private BatchBean buildMessage(String clientId, String text) {
+        SingleMessage message = new SingleMessage();
         // 透传消息，不是通知栏显示，而是在MessageReceiver收到
-        NotificationTemplate template = new NotificationTemplate();
+        TransmissionTemplate template = new TransmissionTemplate();
         template.setAppId(appId);
         template.setAppkey(appKey);
         template.setTransmissionContent(text);
         template.setTransmissionType(0); //这个Type为int型，填写1则自动启动app
 
-        SingleMessage message = new SingleMessage();
+
         message.setData(template); // 把透传消息设置到单消息模版中
         message.setOffline(true); // 是否运行离线发送
         message.setOfflineExpireTime(24 * 3600 * 1000); // 离线消息时常
@@ -103,8 +104,10 @@ public class PushDispatcher {
 
         for (BatchBean bean : beans) {
             try {
+
                 batch.add(bean.message, bean.target);
                 haveData = true;
+
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -134,6 +137,7 @@ public class PushDispatcher {
             try {
                 Logger.getLogger("PushDispatcher")
                         .log(Level.INFO, (String) result.getResponse().get("result"));
+                System.out.println("推送成功");
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
