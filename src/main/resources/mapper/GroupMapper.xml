@@ -110,4 +110,24 @@
             <if test="alias != null">#{alias,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
+    <insert id="insertApply">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select REPLACE(UUID(),"-","")
+        </selectKey>
+        insert into tb_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,applicantId,attach,createdAt,description,targetId,type,updatedAt
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            #{applicantId,jdbcType=VARCHAR},
+            #{attach,jdbcType=VARCHAR},
+            #{createdAt,jdbcType=TIMESTAMP},
+            #{description,jdbcType=VARCHAR},
+            #{targetId,jdbcType=VARCHAR},
+            #{type,jdbcType=INTEGER},
+            #{updateAt,jdbcType=TIMESTAMP}
+            <if test="alias != null">#{alias,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
 </mapper>

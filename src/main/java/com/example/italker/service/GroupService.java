@@ -1,9 +1,11 @@
 package com.example.italker.service;
 
 import com.example.italker.mapper.GroupMapper;
+import com.example.italker.pojo.entity.Apply;
 import com.example.italker.pojo.entity.Group;
 import com.example.italker.pojo.entity.GroupMember;
 import com.example.italker.pojo.entity.User;
+import com.example.italker.pojo.view.group.GroupApplyModel;
 import com.example.italker.pojo.view.group.GroupCreateModel;
 import com.example.italker.pojo.view.group.GroupMemberUpdateModel;
 import com.google.common.base.Strings;
@@ -138,5 +140,18 @@ public class GroupService {
         return groupMapper.getMemberById(memberId,model.getGroupId());
 
 
+    }
+
+    public Apply joinApply(String groupId, User self, GroupApplyModel model) {
+        Apply apply = new Apply();
+        apply.setApplicant(self);
+        apply.setDescription(Strings.isNullOrEmpty(model.getDesciption()) ? "我先加入群聊!!!" : model.getDesciption());
+        apply.setAttach(Strings.isNullOrEmpty(model.getAttach()) ? "" : model.getAttach());
+        apply.setType(Apply.TYPE_ADD_GROUP);
+        apply.setTargetId(groupId);
+
+        groupMapper.insertApply(apply);
+
+        return apply;
     }
 }

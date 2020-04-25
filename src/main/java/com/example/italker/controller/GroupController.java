@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.italker.pojo.card.ApplyCard;
 import com.example.italker.pojo.card.GroupCard;
 import com.example.italker.pojo.card.GroupMemberCard;
+import com.example.italker.pojo.entity.Apply;
 import com.example.italker.pojo.entity.Group;
 import com.example.italker.pojo.entity.GroupMember;
 import com.example.italker.pojo.entity.User;
 import com.example.italker.pojo.view.base.ResponseModel;
+import com.example.italker.pojo.view.group.GroupApplyModel;
 import com.example.italker.pojo.view.group.GroupCreateModel;
 import com.example.italker.pojo.view.group.GroupMemberAddModel;
 import com.example.italker.pojo.view.group.GroupMemberUpdateModel;
@@ -223,10 +225,39 @@ public class GroupController {
     @ApiOperation(value = "拉申请加入一个群，\n" +
             "此时会创建一个加入的申请，并写入表；然后会给管理员发送消息\n" +
             "管理员同意，其实就是调用添加成员的接口把对应的用户添加进去")
-    public ResponseModel<ApplyCard> join(@PathVariable String groupId) {
+    public ResponseModel<ApplyCard> join(@PathVariable String groupId,
+                                         GroupApplyModel model,
+                                         HttpServletRequest request) {
 
+        //得到自己(申请人)的信息
+        User self = (User)request.getAttribute("aself");
 
-        return null;
+        //要加入的群
+        Group group = groupService.findById(groupId);
+        Set<GroupMember> members = groupService.getMembers(group);
+        //判断是否已经是群成员了
+        boolean isAlready = false;
+        Set<String> userIds = members.stream().map(GroupMember::getUserId).collect(Collectors.toSet());
+        for (String userId : userIds){
+            if(userId.equalsIgnoreCase(self.getId())){
+                isAlready = true;
+            }
+        }
+        //如果是，就返回一条信息
+        if(isAlready){
+            return ResponseModel.buildNotFoundUserError("You already join this group");
+
+        }
+        Apply apply = groupService.joinApply(groupId,self,model);
+
+        //创建返回Model
+        ApplyCard applyCard = new ApplyCard(apply);
+        //推送给群主一条信息
+        pushservice.pushGroupOwner(applyCard,group.getOwnerId());
+
+        //返回
+
+        return ResponseModel.buildOk(applyCard);
     }
 
 

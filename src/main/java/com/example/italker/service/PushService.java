@@ -4,6 +4,7 @@ package com.example.italker.service;
 import com.alibaba.fastjson.JSON;
 import com.example.italker.mapper.PushMapper;
 import com.example.italker.mapper.UserMapper;
+import com.example.italker.pojo.card.ApplyCard;
 import com.example.italker.pojo.card.GroupMemberCard;
 import com.example.italker.pojo.card.MessageCard;
 import com.example.italker.pojo.card.UserCard;
@@ -15,6 +16,7 @@ import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -329,8 +331,51 @@ public class PushService {
         PushDispatcher dispatcher = new PushDispatcher();
         PushModel pushModel = new PushModel()
                 .add(history.getEntityType(), history.getEntity());
-       /**最后实现力推*/// dispatcher.add(receiver, pushModel);
-       // dispatcher.submit();
+        dispatcher.add(receiver, pushModel);
+        dispatcher.submit();
 
+    }
+
+    /**
+     * @Description   给群主推送某人申请加入群的推送通知
+     * @param [applyCard, ownerId]
+     * @return void
+     */
+    public void pushGroupOwner(ApplyCard applyCard, String ownerId) {
+
+        User receiver = userMapper.findUserById(ownerId);
+
+        String entity = TextUtil.toJson(applyCard);
+
+        String s;
+        byte[] bytes = entity.getBytes();
+
+        //个推推送工具类
+        PushDispatcher dispatcher = new PushDispatcher();
+
+        //构建推送历史消息model
+        PushHistory pushHistory = new PushHistory();
+        pushHistory.setEntityType(PushModel.ENTITY_TYPE_ADD_GROUP_MEMBERS);
+
+        try {
+            pushHistory.setEntity(new String(bytes,"UTF-8"));
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+
+        pushHistory.setReceiverPushId(receiver.getPushId());
+        pushHistory.setReceiver(receiver);
+
+        pushMapper.saveHistory(pushHistory);
+
+        //构建一个推送的Model
+        PushModel pushModel = new PushModel();
+        pushModel.add(pushHistory.getEntityType(),pushHistory.getEntity());
+
+        //添加到发送者的数据集合中
+        dispatcher.add(receiver, pushModel);
+
+        //提交发送
+        dispatcher.submit();
     }
 }

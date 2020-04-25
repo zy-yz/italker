@@ -1,5 +1,6 @@
 package com.example.italker.mapper;
 
+import com.example.italker.pojo.entity.Apply;
 import com.example.italker.pojo.entity.Group;
 import com.example.italker.pojo.entity.GroupMember;
 import com.example.italker.pojo.entity.User;
@@ -36,4 +37,6 @@ public interface GroupMapper {
     Group getGroup(String id);
 
     void updateMember(GroupMember member);
+
+    void insertApply(Apply apply);
 }
